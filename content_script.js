@@ -71,7 +71,7 @@
             "url" : "dreamhost.com",
             "test": function(){return false;}
         },
-        "amazon" :{
+        "amazon.co.uk" :{
             "url" : "amazon.co.uk",
             "next_url" : function(){
             	var method1 = /page=([1-9]+[0-9]*)/g.exec(window.location.href);
@@ -97,6 +97,49 @@
 	            }
 	            return null;
             }
+        },
+        "amazon.prime" :{
+            "url" : function(){
+                console.log("URL amazon prime");
+                return ( ( window.location.host.indexOf('amazon') != -1 )
+                && ( window.location.pathname.indexOf('/Prime-Instant-Video/') != -1 || window.location.pathname.indexOf('/dp/') != -1 || window.location.pathname.indexOf('/video/') != -1 ) );
+            },
+            "test": function(){
+              console.log('Debug ----------------------sads');
+              var header = document.getElementById('header');
+              var navbar = document.getElementById('navbar');
+              var rhf = document.getElementById('rhf');
+              var footer = document.getElementById('navFooter');
+              var customerReviews = document.getElementById('dv-customer-reviews');
+              var feedback = document.getElementById('dv-main-bottom-section');
+
+
+              if(navbar) navbar.parentNode.removeChild(navbar);
+              if(header) header.parentNode.removeChild(header);
+              if(rhf) rhf.parentNode.removeChild(rhf);
+              if(footer) footer.parentNode.removeChild(footer);
+              if(customerReviews) customerReviews.parentNode.removeChild(customerReviews);
+              if(feedback) feedback.parentNode.removeChild(feedback);
+
+
+
+              var highlight = document.getElementById('dv-btn-minor');
+              if(highlight) highlight.focus();
+
+              console.log( window.location );
+              this.optimize();
+
+              return true;
+            },
+            "optimize" : function(){
+              var removeButton = document.getElementsByClassName('packshot-links');
+              while(removeButton.length > 0){
+                removeButton[removeButton.length-1].parentNode.removeChild(removeButton[removeButton.length-1]);
+                removeButton = document.getElementsByClassName('packshot-links');
+              }
+            },
+            "next_url" : function(){jQuery.tabNext()},
+            "prev_url" : function(){jQuery.tabPrev()}
         },
         "apod" :{
             "url" : "apod.nasa.gov",
@@ -160,6 +203,7 @@
             if(isFunction(spec.url)){
                 if(spec.url()) {
                     vreturn = spec;
+                    console.log("spec.url is ", spec);
                 }
                 return false; // break out of each loop
             } else if(window.location.host.search(spec.url) != -1){
@@ -223,6 +267,7 @@
         // If there is no link found on the page, look for a page parameter
         // in the URL and increment/decrement it by 1
         if(prev_page !== false && next_page !== false){
+            console.log('no link found');
             var page_vars = ["page"];
             for(var i = 0; i < page_vars.length; i++){
                 var has_var = getQueryVariable(page_vars[i]) !== false;
@@ -260,7 +305,7 @@
         var el = document.activeElement;
         return (
             el && (
-                el.tagName.toLowerCase() == 'input'    ||
+                (el.tagName.toLowerCase() == 'input' && el.type != 'checkbox') ||
                 el.tagName.toLowerCase() == 'textarea' ||
                 el.contentEditable.toLowerCase() == 'true'
             )
@@ -268,20 +313,47 @@
     }
 
     function keypad(e){
+        console.log("keyCode ", e.keyCode);
         if(checkIfInInput()) return;
+        var specialCase = checkIfSpecialCase();
+        if(specialCase !== false && isFunction(specialCase.optimize)) specialCase.optimize();
         if(e.keyCode == keycodes.left) {
             if(prev_page !== false){
+              if(isFunction(prev_page) ) {
+                console.log('prev_page function');
+                prev_page();
+              }
+              else{
                 doIfNotPaused(function() {
                     window.location.href = prev_page;
                 });
+              }
             }
         } else if(e.keyCode == keycodes.right) {
             if(next_page !== false){
+              if(isFunction(prev_page) ) {
+                console.log('prev_page function');
+                next_page();
+              }
+              else{
                 doIfNotPaused(function() {
                     window.location.href = next_page;
                 });
+              }
             }
         }
+        //if (e.keyCode == keycodes.up) {
+
+          //console.log("test", document.links, document.activeElement.href);
+           //e.preventDefault();
+        //   jQuery.tabNext();
+
+
+           //var nextInput = inputs.get(inputs.index(document.activeElement) + 1);
+          // if (nextInput) {
+              //nextInput.focus();
+           //}
+        //}
     }
 
     function setKeypad(){
@@ -321,13 +393,18 @@
             if(typeof specialCase.test !== "undefined"){
                 test = specialCase.test();
             }
+
+            if(typeof specialCase.test !== "undefined"){
+                test = specialCase.test();
+            }
             if(test === true){
                 analyse();
+                console.log('start specialCase ', specialCase);
                 if(typeof specialCase.next_url !== "undefined"){
-                    next_page = specialCase.next_url();
+                    next_page = specialCase.next_url;
                 }
                 if(typeof specialCase.prev_url !== "undefined"){
-                    prev_page = specialCase.prev_url();
+                    prev_page = specialCase.prev_url;
                 }
             }
         }
