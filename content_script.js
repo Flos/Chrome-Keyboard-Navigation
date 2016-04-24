@@ -9,13 +9,15 @@
     var arrow_right = function(){jQuery.tabNext()};
     var arrow_up = false;
     var arrow_down = false;
+    var key_escape = function(){closeTab()};
 
     var keycodes =
     {               // The keycodes for up down left and right movement.
         left:   37, // This defaults to the arrow keys, but you could
         up:     38, // just as easily set it to the WASD keys.
         right:  39, //
-        down:   40  //
+        down:   40, //
+        esc:    27
     };
 
     // Special cases for which the normal finding function doesn't work.
@@ -143,6 +145,7 @@
         else if(e.keyCode == keycodes.right && arrow_right !== false) arrow_right();
         else if(e.keyCode == keycodes.up && arrow_up !== false)       arrow_up();
         else if(e.keyCode == keycodes.down && arrow_down !== false)   arrow_down();
+        else if(e.keyCode == keycodes.esc) key_escape();
     }
 
     function setKeypad(){
@@ -175,5 +178,10 @@
             setKeypad();
         }
     }
+
+    function closeTab(){
+      chrome.runtime.sendMessage({id: "closeTab"},function(response){console.log("response: ",response)});
+    }
+
     start();
 })();

@@ -38,24 +38,29 @@
 
     function togglePause(tab) {
         setPaused(!isPaused());
-
-        // Reload the current tab.
-        // chrome.tabs.update(tab.id, {url: tab.url});
     }
 
     function onMessage(request, sender, sendResponse) {
-        var requestId = request.id;
 
-        if(requestId == 'isPaused?') {
+        if(request.id == 'isPaused?') {
             sendResponse({value: isPaused()});
         }
-        else if(requestId == 'setOptions') {
+        else if(request.id == 'setOptions') {
             localStorage.setItem(KEY_OPTIONS, request.options);
+        }
+        else if (request.id == 'closeTab' ) {
+            chrome.tabs.query({ currentWindow: true, active: true },
+              function (tabs) {
+               sendResponse({message: "closing tab", id: tabs[0].id });
+               chrome.tabs.remove(tabs[0].id);
+             }
+           );
         }
     }
 
     chrome.browserAction.onClicked.addListener(togglePause);
     chrome.extension.onRequest.addListener(onMessage);
+    chrome.runtime.onMessage.addListener(onMessage);
 
     updateBadge(isPaused());
 
