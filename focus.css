@@ -1,0 +1,7 @@
+*:focus {
+outline: #0099CC solid 2px;
+transform: scale(1.2);
+               text-align:center;
+               -webkit-transition: opacity .25s ease;
+-moz-transition: opacity .25s ease;
+}

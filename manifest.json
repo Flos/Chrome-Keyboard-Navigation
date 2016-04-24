@@ -31,6 +31,7 @@
                 "jquery.tabbable.js",
                 "content_script.js"
             ],
+            "css" : ["focus.css"],
             "run_at": "document_idle"
         }
     ],
