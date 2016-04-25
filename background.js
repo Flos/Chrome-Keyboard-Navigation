@@ -53,6 +53,12 @@
               function (tabs) {
                sendResponse({message: "closing tab", id: tabs[0].id });
                chrome.tabs.remove(tabs[0].id);
+
+               var window = chrome.windows.getLastFocused({ populate: true }, function(window){
+                 if(window.tabs.length <=1){
+                   chrome.windows.remove(window.id);
+                 }
+               });
              }
            );
         }
