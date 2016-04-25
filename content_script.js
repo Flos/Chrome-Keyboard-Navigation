@@ -29,14 +29,17 @@
                 && ( window.location.pathname.indexOf('/Prime-Instant-Video/') != -1 || window.location.pathname.indexOf('/dp/') != -1 || window.location.pathname.indexOf('/video/') != -1 ) );
             },
             "test": function(){
-              console.log('Debug ----------------------sads');
+              this.optimize();
+
+              return true;
+            },
+            "optimize" : function(){
               var header = document.getElementById('header');
               var navbar = document.getElementById('navbar');
               var rhf = document.getElementById('rhf');
               var footer = document.getElementById('navFooter');
               var customerReviews = document.getElementById('dv-customer-reviews');
               var feedback = document.getElementById('dv-main-bottom-section');
-
 
               if(navbar) navbar.parentNode.removeChild(navbar);
               if(header) header.parentNode.removeChild(header);
@@ -45,17 +48,9 @@
               if(customerReviews) customerReviews.parentNode.removeChild(customerReviews);
               if(feedback) feedback.parentNode.removeChild(feedback);
 
-
-
               var highlight = document.getElementById('dv-btn-minor');
               if(highlight) highlight.focus();
 
-              console.log( window.location );
-              this.optimize();
-
-              return true;
-            },
-            "optimize" : function(){
               var removeButton = document.getElementsByClassName('packshot-links');
               while(removeButton.length > 0){
                 removeButton[removeButton.length-1].parentNode.removeChild(removeButton[removeButton.length-1]);
@@ -92,6 +87,15 @@
 
     function getDomain(url){
         return url.replace('http://','').replace('https://','').split(/[\/?#]/)[0];
+    }
+
+    function doIfNotPaused(callback) {
+        chrome.extension.sendRequest({id: 'isPaused?'}, function(response) {
+            isPaused = response.value;
+            if(!isPaused) {
+                callback();
+            }
+        });
     }
 
     // Checks if the url is one of the special cases above
@@ -138,8 +142,11 @@
     function keypad(e){
         console.log("keyCode ", e.keyCode);
         //if(checkIfInInput()) return;
-        var specialCase = checkIfSpecialCase();
-        if(specialCase !== false && isFunction(specialCase.optimize)) specialCase.optimize();
+
+        doIfNotPaused(function() {
+          var specialCase = checkIfSpecialCase();
+          if(specialCase !== false && isFunction(specialCase.optimize)) specialCase.optimize();
+        });
 
         if(e.keyCode == keycodes.left && arrow_left !== false)        arrow_left();
         else if(e.keyCode == keycodes.right && arrow_right !== false) arrow_right();
@@ -157,21 +164,24 @@
     function start() {
         var specialCase = checkIfSpecialCase();
         var test = true;
-        if(specialCase !== false){
+
+        doIfNotPaused(function() {
+          if(specialCase !== false){
             // Sometimes we need to test for certain things
             if(typeof specialCase.test !== "undefined" && isFunction(specialCase.test()) ){
-                test = specialCase.test();
+              test = specialCase.test();
             }
             if(test === true){
-                console.log('start specialCase ', specialCase);
-                if(typeof specialCase.arrow_right !== "undefined"){
-                    arrow_right = specialCase.arrow_right;
-                }
-                if(typeof specialCase.arrow_left !== "undefined"){
-                    arrow_left = specialCase.arrow_left;
-                }
+              console.log('start specialCase ', specialCase);
+              if(typeof specialCase.arrow_right !== "undefined"){
+                arrow_right = specialCase.arrow_right;
+              }
+              if(typeof specialCase.arrow_left !== "undefined"){
+                arrow_left = specialCase.arrow_left;
+              }
             }
-        }
+          }
+        });
         setKeypad();
     }
 
