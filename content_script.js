@@ -157,9 +157,7 @@
     function start() {
         var specialCase = checkIfSpecialCase();
         var test = true;
-        if(specialCase === false){
-          return
-        } else {
+        if(specialCase !== false){
             // Sometimes we need to test for certain things
             if(typeof specialCase.test !== "undefined" && isFunction(specialCase.test()) ){
                 test = specialCase.test();
@@ -174,9 +172,7 @@
                 }
             }
         }
-        if(test === true) {
-            setKeypad();
-        }
+        setKeypad();
     }
 
     function closeTab(){
