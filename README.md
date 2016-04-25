@@ -1,9 +1,7 @@
 # Keyboard Navigation Extension for Chrome
 ## Navigate website using the left and right keys
 
-This extension tries to find the next/previous URLs on a page and just binds the left and right keys to go to those URLs.
+This extension binds the left and right keys to navigate true tabbable items.
+The escape key closes the tab or if the last tab is closed it closes the window.
 
-This is my first extension, so it may not be written very well!
-
-
-You can find the extension on the [Chrome Web Store](https://chrome.google.com/webstore/detail/previous-and-next-page-ke/bgddcngmfadknajipncoemekkikibfhg).
+Webpages can be "optimized" for keyboard navigation by implementing the optimize() function.
