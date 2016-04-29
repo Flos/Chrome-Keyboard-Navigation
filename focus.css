@@ -1,7 +1,7 @@
 *:focus {
-outline: #0099CC solid 2px;
-transform: scale(1.2);
-text-align:center;
+outline-style: dashed;
+border: 5px solid yellow;
+font-family: Cursive;
 -webkit-transition: opacity .25s ease;
 -moz-transition: opacity .25s ease;
 }
