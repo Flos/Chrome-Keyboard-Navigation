@@ -7,8 +7,8 @@
 
     var arrow_left = function(){jQuery.tabPrev()};
     var arrow_right = function(){jQuery.tabNext()};
-    var arrow_up = false;
-    var arrow_down = false;
+    var arrow_up = function(){focusUp()};
+    var arrow_down = function(){focusDown()};
     var key_escape = function(){closeTab()};
 
     var keycodes =
@@ -30,6 +30,7 @@
             },
             "test": function(){
               this.optimize();
+              jQuery.tabNext(); // Jump to next focusable element
 
               return true;
             },
@@ -148,11 +149,25 @@
           if(specialCase !== false && isFunction(specialCase.optimize)) specialCase.optimize();
         });
 
-        if(e.keyCode == keycodes.left && arrow_left !== false)        arrow_left();
-        else if(e.keyCode == keycodes.right && arrow_right !== false) arrow_right();
-        else if(e.keyCode == keycodes.up && arrow_up !== false)       arrow_up();
-        else if(e.keyCode == keycodes.down && arrow_down !== false)   arrow_down();
-        else if(e.keyCode == keycodes.esc) key_escape();
+        if(e.keyCode == keycodes.left && arrow_left !== false) {
+          e.preventDefault();
+          arrow_left();
+        }
+        else if(e.keyCode == keycodes.right && arrow_right !== false) {
+          e.preventDefault();  arrow_right();
+        }
+        else if(e.keyCode == keycodes.up && arrow_up !== false) {
+          e.preventDefault();
+          arrow_up();
+        }
+        else if(e.keyCode == keycodes.down && arrow_down !== false) {
+          e.preventDefault();
+          arrow_down();
+        }
+        else if(e.keyCode == keycodes.esc && keycodes !==false) {
+          e.preventDefault();
+          key_escape();
+        }
     }
 
     function setKeypad(){

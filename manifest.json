@@ -30,6 +30,7 @@
             "js": [
                 "jquery.js",
                 "jquery.tabbable.js",
+                "up_down.js",
                 "content_script.js"
             ],
             "css" : ["focus.css"],
