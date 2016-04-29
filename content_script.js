@@ -60,8 +60,29 @@
                 removeButton = document.getElementsByClassName('packshot-links');
               }
             },
-            "arrow_right" : function(){jQuery.tabNext()},
-            "arrow_left" : function(){jQuery.tabPrev()}
+            "arrow_right" : function()
+            {
+              var video = $('video');
+              if( video.length === 0 || video.css('display') == 'none')
+              {
+                jQuery.tabNext();
+              }
+              else{
+                return true;
+              }
+              return false;
+            },
+            "arrow_left" : function(){
+              var video = $('video');
+              if( video.length === 0 || video.css('display') == 'none')
+              {
+                jQuery.tabPrev();
+              }
+              else{
+                return true;
+              }
+              return false;
+            }
         },
         "sample" :{
             "url" : "sample.url",
@@ -153,21 +174,17 @@
 
         if(isPaused) return;
 
-        if(e.keyCode == keycodes.left && arrow_left !== false) {
-          e.preventDefault();
-          arrow_left();
+        if(e.keyCode == keycodes.left && isFunction(arrow_left)) {
+          if(arrow_left()) e.preventDefault();
         }
-        else if(e.keyCode == keycodes.right && arrow_right !== false) {
-          e.preventDefault();
-          arrow_right();
+        else if(e.keyCode == keycodes.right && isFunction(arrow_right)) {
+          if(arrow_right()) e.preventDefault();
         }
-        else if(e.keyCode == keycodes.up && arrow_up !== false) {
-          e.preventDefault();
-          arrow_up();
+        else if(e.keyCode == keycodes.up && isFunction(arrow_up)) {
+          if(arrow_up()) e.preventDefault();
         }
-        else if(e.keyCode == keycodes.down && arrow_down !== false) {
-          e.preventDefault();
-          arrow_down();
+        else if(e.keyCode == keycodes.down && isFunction(arrow_down)) {
+          if(arrow_down()) e.preventDefault();
         }
         else if(e.keyCode == keycodes.esc && keycodes !==false) {
           e.preventDefault();
