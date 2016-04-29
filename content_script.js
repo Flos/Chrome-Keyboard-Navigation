@@ -11,6 +11,8 @@
     var arrow_down = function(){focusDown()};
     var key_escape = function(){closeTab()};
 
+    var isPaused = false;
+
     var keycodes =
     {               // The keycodes for up down left and right movement.
         left:   37, // This defaults to the arrow keys, but you could
@@ -149,12 +151,15 @@
           if(specialCase !== false && isFunction(specialCase.optimize)) specialCase.optimize();
         });
 
+        if(isPaused) return;
+
         if(e.keyCode == keycodes.left && arrow_left !== false) {
           e.preventDefault();
           arrow_left();
         }
         else if(e.keyCode == keycodes.right && arrow_right !== false) {
-          e.preventDefault();  arrow_right();
+          e.preventDefault();
+          arrow_right();
         }
         else if(e.keyCode == keycodes.up && arrow_up !== false) {
           e.preventDefault();
