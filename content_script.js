@@ -32,7 +32,16 @@
             },
             "test": function(){
               this.optimize();
-              jQuery.tabNext(); // Jump to next focusable element
+              var highlight = $('.dv-play-btn.dv-play-includes-minor.deeplinkable');
+              console.log('btnplay:', highlight.length, highlight);
+              if(highlight.length >0 ) {
+                console.log("focuse");
+                highlight.find('a[href]').focus();
+              }
+              else{
+                jQuery.tabNext();
+              }
+              // Jump to next focusable element
 
               return true;
             },
@@ -50,9 +59,6 @@
               if(footer) footer.parentNode.removeChild(footer);
               if(customerReviews) customerReviews.parentNode.removeChild(customerReviews);
               if(feedback) feedback.parentNode.removeChild(feedback);
-
-              var highlight = document.getElementById('dv-btn-minor');
-              if(highlight) highlight.focus();
 
               var removeButton = document.getElementsByClassName('packshot-links');
               while(removeButton.length > 0){
